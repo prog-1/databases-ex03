@@ -32,8 +32,9 @@ Create exams.sql file with `INSERT INTO` query that adds entries to `exams` tabl
 1. Find the number of students in every class.
 2. Find the number of students for every year.
 3. Find unique subjects that students learn for a given year.
-4. For each exam find
+4. Find how many distinct subjects have exams.
+5. For each exam find
     - average grade
     - how many students passed (4+) and how many failed (<4) the exam.
-5. For each student for percentage of passed exams.
-6. For each year/mod find unique lesson count.
+6. For each student for percentage of passed exams.
+7. For each year/mod find unique lesson count.
