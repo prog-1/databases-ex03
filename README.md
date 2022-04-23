@@ -4,10 +4,6 @@ Download [DB Browser for SQLite](https://sqlitebrowser.org/). Complete all
 assignments in the DBMS using SQL language. Copy the SQL scripts into the fields
 below. Some scripts are already given as an example.
 
-## References
-
-You may rely on the SQL language documentation while implementing the scripts.
-
 ## Assignment
 
 The exercises are based on the database from the previous assignment
@@ -21,21 +17,84 @@ Create a table `exams` with fields of the given type:
 * `lesson_id`: `integer`
 * `grade`: `integer`
 
+The table contains grades that a student identified by the student ID received for the lesson identified by the lesson ID.
+
+The table may contain `NULL` values. The `NULL` values specify that a student was not attending the exam. 
+
 ```sql
 PASTE YOUR CODE HERE
 ```
 
-Create exams.sql file with `INSERT INTO` query that adds entries to `exams` table with the data from `exams.csv`.
+Create `exams.sql` file with `INSERT INTO` query that adds entries to `exams` table with the data from `exams.csv`.
 
-## Exercises
+### 1. Find the number of students in every class
 
-1. Find the number of students in every class.
-2. Find the number of students for every year.
-3. Find unique subjects that students learn for a given year.
-4. Find how many distinct subjects have exams.
-5. For each exam find
-    - average grade
-    - how many students passed (4+) and how many failed (<4) the exam.
-    - how many students did not attend the exam
-6. For each student that has at least a single exam scheuled find passed, failed and missed exam count.
-7. For each year/mod find unique lesson count.
+Write a query that outputs `year`, `modifier`, `student_cnt` columns that specify the number of students (`student_cnt`) in a class for all classes.
+
+```sql
+PASTE YOUR CODE HERE
+```
+
+### 2. Find the number of students for every year
+
+Write a query that outputs `year`, `student_cnt` columns that specify the number of students (`student_cnt`) in a class for each year (`year`).
+
+```sql
+PASTE YOUR CODE HERE
+```
+
+### 3. Find unique subjects that students learn for a given year
+
+Write a query that outputs `name`, `surname`, `unique_lesson_cnt`, where `unique_lesson_cnt` is the number of **unique** lessons that a student identified by `name`, `surname` has.
+
+```sql
+PASTE YOUR CODE HERE
+```
+
+### 4. Find how many distinct lessons have exams
+
+Write a query that outputs `name` and `lesson_cnt`, where `lesson_cnt` is the number of **unique** lessons (`name`) that have exams.
+
+```sql
+PASTE YOUR CODE HERE
+```
+
+### 5.1. Find an average grade for each exam
+
+Write a query that outputs `year`, `modifier`, `lesson` `average_grade`, where `average_grade` is an average grade for each class (identified by `year` and `modifier`) and a subject (identified by `lesson`).
+
+```sql
+PASTE YOUR CODE HERE
+```
+
+### 5.2 Find the number of students that passed/failed exams
+
+Write a query that finds the number of students that passed (4+ grade) and failed (<4 grade) the exams.
+
+```sql
+PASTE YOUR CODE HERE
+```
+
+### 5.3 How many students did not attend the exams
+
+Write a query that finds the number of students that did not attend the exams
+
+```sql
+PASTE YOUR CODE HERE
+```
+
+### 6. Passed/failed/missed exams for each student
+
+Write a query that outputs `name`, `surname`, `passed_exams`, `failed_exams`, `missed_exams`, where `passed_exams`, `failed_exams`, `missed_exams` is the number of passed/failed/missed exams for each student (identified by `name`, `surname`).
+
+```sql
+PASTE YOUR CODE HERE
+```
+
+### 7. Find unique lessons count for each class.
+
+Write a query that for each class (`year`, `modifier`) finds unique lesson count.
+
+```sql
+PASTE YOUR CODE HERE
+```
