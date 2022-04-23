@@ -26,3 +26,12 @@ PASTE YOUR CODE HERE
 ```
 
 Create exams.sql file with `INSERT INTO` query that adds entries to `exams` table with the data from `exams.csv`.
+
+## Exercises
+
+1. Find the number of students in every class.
+2. Find the number of students for every year.
+3. Find unique subjects that students learn for a given year.
+4. For each exam find a) average grade b) how many students passed (4+) and how many failed (<4) the exam.
+5. For each student for percentage of passed exams.
+6. For each year/mod find unique lesson count.
