@@ -36,5 +36,6 @@ Create exams.sql file with `INSERT INTO` query that adds entries to `exams` tabl
 5. For each exam find
     - average grade
     - how many students passed (4+) and how many failed (<4) the exam.
-6. For each student for percentage of passed exams.
+    - how many students did not attend the exam
+6. For each student that has at least a single exam scheuled find passed, failed and missed exam count.
 7. For each year/mod find unique lesson count.
