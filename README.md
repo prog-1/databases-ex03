@@ -22,7 +22,11 @@ The table contains grades that a student identified by the student ID received f
 The table may contain `NULL` values. The `NULL` values specify that a student was not attending the exam. 
 
 ```sql
-PASTE YOUR CODE HERE
+CREATE TABLE exams(
+student_id INTEGER,
+lesson_id INTEGER,
+grade INTEGER
+);
 ```
 
 Create `exams.sql` file with `INSERT INTO` query that adds entries to `exams` table with the data from `exams.csv`.
