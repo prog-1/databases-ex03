@@ -66,7 +66,8 @@ PASTE YOUR CODE HERE
 Write a query that outputs `name` and `lesson_cnt`, where `lesson_cnt` is the number of **unique** lessons (`name`) that have exams.
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT DISTINCT name FROM exams
+JOIN lessons on lessons.id = exams.lessons_id
 ```
 
 ### 5.1. Find an average grade for each exam
