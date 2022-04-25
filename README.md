@@ -32,7 +32,11 @@ Create `exams.sql` file with `INSERT INTO` query that adds entries to `exams` ta
 Write a query that outputs `year`, `modifier`, `student_cnt` columns that specify the number of students (`student_cnt`) in a class for all classes.
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT year || modifier AS class, 
+COUNT(*) AS students
+FROM class
+JOIN groups ON class.id = groups.class_id
+GROUP BY class_id
 ```
 
 ### 2. Find the number of students for every year
@@ -40,7 +44,11 @@ PASTE YOUR CODE HERE
 Write a query that outputs `year`, `student_cnt` columns that specify the number of students (`student_cnt`) in a class for each year (`year`).
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT year, 
+COUNT(*) AS students
+FROM class
+JOIN groups ON class.id = groups.class_id
+GROUP BY year
 ```
 
 ### 3. Find unique subjects that students learn for a given year
