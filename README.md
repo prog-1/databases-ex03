@@ -22,7 +22,7 @@ The table contains grades that a student identified by the student ID received f
 The table may contain `NULL` values. The `NULL` values specify that a student was not attending the exam. 
 
 ```sql
-PASTE YOUR CODE HERE
+
 ```
 
 Create `exams.sql` file with `INSERT INTO` query that adds entries to `exams` table with the data from `exams.csv`.
@@ -32,7 +32,12 @@ Create `exams.sql` file with `INSERT INTO` query that adds entries to `exams` ta
 Write a query that outputs `year`, `modifier`, `student_cnt` columns that specify the number of students (`student_cnt`) in a class for all classes.
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT class.year || class.modifier as classes, count(*) as cnt
+FROM groups
+JOIN class
+ON groups.class_id = class.id
+GROUP by class_id
+
 ```
 
 ### 2. Find the number of students for every year
