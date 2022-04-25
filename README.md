@@ -33,6 +33,14 @@ Write a query that outputs `year`, `modifier`, `student_cnt` columns that specif
 
 ```sql
 PASTE YOUR CODE HERE
+
+SELECT class.year || class.modifier, 
+count(*) AS student_cnt
+FROM groups 
+JOIN class ON (class.id = groups.class_id)
+GROUP BY class_id
+;
+
 ```
 
 ### 2. Find the number of students for every year
@@ -41,6 +49,12 @@ Write a query that outputs `year`, `student_cnt` columns that specify the number
 
 ```sql
 PASTE YOUR CODE HERE
+
+SELECT year, 
+count(*) AS student_cnt
+FROM groups
+JOIN class ON (class.id = groups.class_id)
+GROUP BY year
 ```
 
 ### 3. Find unique subjects that students learn for a given year
