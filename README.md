@@ -46,7 +46,11 @@ on class_id == class.id
 Write a query that outputs `year`, `student_cnt` columns that specify the number of students (`student_cnt`) in a class for each year (`year`).
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT year, count(*) AS student_cnt FROM(
+SELECT * FROM groups
+INNER JOIN class
+on class_id == class.id
+) GROUP BY year
 ```
 
 ### 3. Find unique subjects that students learn for a given year
