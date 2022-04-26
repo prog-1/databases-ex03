@@ -22,7 +22,12 @@ The table contains grades that a student identified by the student ID received f
 The table may contain `NULL` values. The `NULL` values specify that a student was not attending the exam. 
 
 ```sql
-PASTE YOUR CODE HERE
+CREATE TABLE exams(
+student_id INTEGER,
+lesson_id INTEGER,
+grade INTEGER,
+PRIMARY KEY(student_id AUTOINCREMENT)
+);
 ```
 
 Create `exams.sql` file with `INSERT INTO` query that adds entries to `exams` table with the data from `exams.csv`.
@@ -32,7 +37,13 @@ Create `exams.sql` file with `INSERT INTO` query that adds entries to `exams` ta
 Write a query that outputs `year`, `modifier`, `student_cnt` columns that specify the number of students (`student_cnt`) in a class for all classes.
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT class.year, class.modifier,
+count(*) AS cnt
+FROM groups 
+JOIN class
+ON class.id = groups.class_id
+GROUP BY class_id
+;
 ```
 
 ### 2. Find the number of students for every year
@@ -40,7 +51,13 @@ PASTE YOUR CODE HERE
 Write a query that outputs `year`, `student_cnt` columns that specify the number of students (`student_cnt`) in a class for each year (`year`).
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT class.year,
+count(*) AS cnt
+FROM groups 
+JOIN class
+ON class.id = groups.class_id
+GROUP BY year
+;
 ```
 
 ### 3. Find unique subjects that students learn for a given year
@@ -48,7 +65,13 @@ PASTE YOUR CODE HERE
 Write a query that outputs `name`, `surname`, `unique_lesson_cnt`, where `unique_lesson_cnt` is the number of **unique** lessons that a student identified by `name`, `surname` has.
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT students.name, students.surname,
+count(*) AS unique_lesson_cnt
+FROM timetable
+JOIN groups ON timetable.class_id = groups.class_id
+JOIN students ON students.id = groups.student_id
+GROUP BY students.name, students.surname
+;
 ```
 
 ### 4. Find how many distinct lessons have exams
@@ -56,7 +79,16 @@ PASTE YOUR CODE HERE
 Write a query that outputs `name` and `lesson_cnt`, where `lesson_cnt` is the number of **unique** lessons (`name`) that have exams.
 
 ```sql
-PASTE YOUR CODE HERE
+WITH 
+	lesson AS(
+		SELECT lessons.name 
+		FROM lessons
+		GROUP BY lessons.name
+	)
+SELECT
+count(*) as lesson_cnt
+FROM lesson
+;
 ```
 
 ### 5.1. Find an average grade for each exam
