@@ -97,7 +97,6 @@ Write a query that outputs `year`, `modifier`, `lesson` `average_grade`, where `
 
 ```sql
 PASTE YOUR CODE HERE
-```
 SELECT class.year, class.modifier, lessons.name, 
 avg(exam.grade) AS average_grade
 FROM exam
@@ -108,6 +107,7 @@ ON groups.class_id=class.id
 JOIN lessons
 ON exam.lesson_id=lessons.id
 GROUP BY year, modifier
+```
 
 
 ### 5.2 Find the number of students that passed/failed exams
