@@ -97,7 +97,11 @@ ORDER by class.id
 Write a query that finds the number of students that passed (4+ grade) and failed (<4 grade) the exams.
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT * FROM (SELECT count(grade) as passed FROM exams
+WHERE grade	>= 4)
+NATURAL JOIN
+(SELECT count(grade) as failed FROM exams
+WHERE grade	< 4)
 ```
 
 ### 5.3 How many students did not attend the exams
@@ -105,7 +109,8 @@ PASTE YOUR CODE HERE
 Write a query that finds the number of students that did not attend the exams
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT count(*) as did_not_attend FROM exams 
+WHERE grade is NULL
 ```
 
 ### 6. Passed/failed/missed exams for each student
@@ -121,5 +126,8 @@ PASTE YOUR CODE HERE
 Write a query that for each class (`year`, `modifier`) finds unique lesson count.
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT class.year || class.modifier AS classes, count(*) as unique_lesson_cnt
+FROM timetable
+JOIN class ON timetable.class_id = class.id
+GROUP by class.year, class.modifier
 ```
