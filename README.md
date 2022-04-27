@@ -22,7 +22,11 @@ The table contains grades that a student identified by the student ID received f
 The table may contain `NULL` values. The `NULL` values specify that a student was not attending the exam. 
 
 ```sql
-PASTE YOUR CODE HERE
+CREATE TABLE exam(
+student_id INTEGER,
+lesson_id INTEGER,
+grade INTEGER
+);
 ```
 
 Create `exams.sql` file with `INSERT INTO` query that adds entries to `exams` table with the data from `exams.csv`.
@@ -33,6 +37,14 @@ Write a query that outputs `year`, `modifier`, `student_cnt` columns that specif
 
 ```sql
 PASTE YOUR CODE HERE
+
+SELECT class.year || class.modifier, 
+count(*) AS student_cnt
+FROM groups 
+JOIN class ON (class.id = groups.class_id)
+GROUP BY class_id
+;
+
 ```
 
 ### 2. Find the number of students for every year
@@ -41,6 +53,12 @@ Write a query that outputs `year`, `student_cnt` columns that specify the number
 
 ```sql
 PASTE YOUR CODE HERE
+
+SELECT year, 
+count(*) AS student_cnt
+FROM groups
+JOIN class ON (class.id = groups.class_id)
+GROUP BY year
 ```
 
 ### 3. Find unique subjects that students learn for a given year
@@ -49,6 +67,17 @@ Write a query that outputs `name`, `surname`, `unique_lesson_cnt`, where `unique
 
 ```sql
 PASTE YOUR CODE HERE
+
+SELECT students.name, students.surname,
+count(*) AS unique_lesson_cnt
+FROM timetable
+JOIN groups
+ON timetable.class_id = groups.class_id
+JOIN students
+ON students.id = groups.student_id
+GROUP BY name, surname 
+;
+
 ```
 
 ### 4. Find how many distinct lessons have exams
@@ -56,7 +85,10 @@ PASTE YOUR CODE HERE
 Write a query that outputs `name` and `lesson_cnt`, where `lesson_cnt` is the number of **unique** lessons (`name`) that have exams.
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT DISTINCT name 
+FROM exam
+JOIN lessons
+ON lessons.id = exam.lesson_id
 ```
 
 ### 5.1. Find an average grade for each exam
@@ -65,7 +97,18 @@ Write a query that outputs `year`, `modifier`, `lesson` `average_grade`, where `
 
 ```sql
 PASTE YOUR CODE HERE
+SELECT class.year, class.modifier, lessons.name, 
+avg(exam.grade) AS average_grade
+FROM exam
+JOIN groups
+ON exam.student_id=groups.student_id
+JOIN class
+ON groups.class_id=class.id
+JOIN lessons
+ON exam.lesson_id=lessons.id
+GROUP BY year, modifier
 ```
+
 
 ### 5.2 Find the number of students that passed/failed exams
 
@@ -73,6 +116,23 @@ Write a query that finds the number of students that passed (4+ grade) and faile
 
 ```sql
 PASTE YOUR CODE HERE
+
+SELECT * FROM 
+(
+SELECT 
+count(*) AS passed
+FROM exam
+WHERE grade >=4
+)
+AS passed,
+(
+SELECT
+count(*) AS failed
+FROM exam
+WHERE grade < 4
+)
+AS failed;
+
 ```
 
 ### 5.3 How many students did not attend the exams
@@ -81,6 +141,12 @@ Write a query that finds the number of students that did not attend the exams
 
 ```sql
 PASTE YOUR CODE HERE
+
+SELECT count (*) AS without_exams
+FROM exam
+WHERE grade IS null
+;
+
 ```
 
 ### 6. Passed/failed/missed exams for each student
@@ -97,4 +163,13 @@ Write a query that for each class (`year`, `modifier`) finds unique lesson count
 
 ```sql
 PASTE YOUR CODE HERE
+
+SELECT class.year, class.modifier,
+count(*) AS unique_lesson_cnt
+FROM timetable
+JOIN class
+ON timetable.class_id = class.id
+GROUP BY year, modifier
+;
+
 ```
