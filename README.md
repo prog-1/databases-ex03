@@ -103,7 +103,26 @@ GROUP BY year, modifier
 Write a query that finds the number of students that passed (4+ grade) and failed (<4 grade) the exams.
 
 ```sql
-PASTE YOUR CODE HERE
+WITH 
+	passed AS (
+		SELECT e.grade,count(e.grade) AS passed
+		FROM exams as e
+		GROUP BY grade
+		HAVING e.grade >= 4
+	),
+	failed AS (
+		SELECT e.grade, count(e.grade) AS failed
+		FROM exams as e
+		GROUP BY grade
+		HAVING e.grade < 4
+	)
+SELECT sum(passed)as " "
+FROM passed
+union
+SELECT sum(failed) as failed
+FROM failed
+ 
+
 ```
 
 ### 5.3 How many students did not attend the exams
@@ -120,7 +139,32 @@ WHERE grade IS NULL
 Write a query that outputs `name`, `surname`, `passed_exams`, `failed_exams`, `missed_exams`, where `passed_exams`, `failed_exams`, `missed_exams` is the number of passed/failed/missed exams for each student (identified by `name`, `surname`).
 
 ```sql
-PASTE YOUR CODE HERE
+WITH
+	passed AS (
+		SELECT id, count(*) AS passed
+		FROM students as s
+		JOIN exams as e ON e.student_id == s.id AND e.grade >= 4
+		GROUP BY id
+	),
+	failed AS (
+		SELECT id, count(*) AS failed
+		FROM students as s 
+		JOIN exams as e ON e.student_id == s.id AND e.grade < 4
+		GROUP BY id
+	), 
+	missed AS (
+		SELECT id, count(*) AS missed
+		FROM students as s
+		JOIN exams  as e ON e.student_id = s.id AND e.grade IS NULL
+		GROUP BY id
+	)
+SELECT s.name, s.surname, passed AS passed_exams, failed AS faild_exams, missed AS missed_exams
+FROM exams 
+JOIN students as s ON (exams.student_id = s.id)
+LEFT JOIN passed ON s.id = passed.id
+LEFT JOIN failed ON s.id = failed.id
+LEFT JOIN missed ON s.id = missed.id
+GROUP BY name, surname
 ```
 
 ### 7. Find unique lessons count for each class.
