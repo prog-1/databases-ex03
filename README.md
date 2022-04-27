@@ -80,8 +80,16 @@ JOIN lessons ON (exams.lesson_id = lessons.id)
 Write a query that outputs `year`, `modifier`, `lesson` `average_grade`, where `average_grade` is an average grade for each class (identified by `year` and `modifier`) and a subject (identified by `lesson`).
 
 ```sql
-SELECT class.year, class.modifier, lessons.name, avg(exams.grade) AS average_grade 
+-- WITH 
+-- noround AS(
+-- SELECT avg(exams.grade) AS avg_g
+-- FROM exams
+-- GROUP BY avg_g
+-- )
+SELECT class.year, class.modifier, lessons.name, avg(exams.grade) AS average_grade --round(avg_g, 2) AS average_grade
 FROM exams
+--FROM noround
+--JOIN exams (there is bug with rounding)
 JOIN groups ON (exams.student_id = groups.student_id)
 JOIN class ON (groups.class_id = class.id)
 JOIN lessons ON (exams.lesson_id = lessons.id)
@@ -93,7 +101,26 @@ GROUP BY year, modifier
 Write a query that finds the number of students that passed (4+ grade) and failed (<4 grade) the exams.
 
 ```sql
-PASTE YOUR CODE HERE
+WITH 
+	passed AS (
+		SELECT exams.grade,count(exams.grade) AS p
+		FROM exams
+		GROUP BY grade
+		HAVING exams.grade >= 4
+	),
+	failed AS (
+		SELECT exams.grade, count(exams.grade) AS f
+		FROM exams
+		GROUP BY grade
+		HAVING exams.grade < 4
+	), 
+	summ AS (
+		SELECT sum(passed.p) AS sump
+		FROM passed
+	)
+SELECT sump AS passed, sum(f) AS failed
+FROM summ
+JOIN failed
 ```
 
 ### 5.3 How many students did not attend the exams
@@ -101,7 +128,9 @@ PASTE YOUR CODE HERE
 Write a query that finds the number of students that did not attend the exams
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT count(*) AS missed
+FROM exams
+WHERE grade IS NULL
 ```
 
 ### 6. Passed/failed/missed exams for each student
@@ -109,7 +138,33 @@ PASTE YOUR CODE HERE
 Write a query that outputs `name`, `surname`, `passed_exams`, `failed_exams`, `missed_exams`, where `passed_exams`, `failed_exams`, `missed_exams` is the number of passed/failed/missed exams for each student (identified by `name`, `surname`).
 
 ```sql
-PASTE YOUR CODE HERE
+WITH
+	passed AS (
+		SELECT id, count(*) AS p
+		FROM students
+		JOIN exams ON exams.student_id == students.id AND exams.grade >= 4
+		GROUP BY id
+	),
+	failed AS (
+		SELECT id, count(*) AS f
+		FROM students
+		JOIN exams ON exams.student_id == students.id AND exams.grade < 4
+		GROUP BY id
+	), 
+	missed AS (
+		SELECT id, count(*) AS missed
+		FROM students
+		JOIN exams ON exams.student_id = students.id AND exams.grade IS NULL
+		GROUP BY id
+	)
+
+SELECT students.name, students.surname, p AS passed_exams, f AS faild_exams, missed AS missed_exams
+FROM exams
+JOIN students ON (exams.student_id = students.id)
+LEFT JOIN passed ON students.id = passed.id
+LEFT JOIN failed ON students.id = failed.id
+LEFT JOIN missed ON students.id = missed.id
+GROUP BY name, surname
 ```
 
 ### 7. Find unique lessons count for each class.
@@ -117,5 +172,8 @@ PASTE YOUR CODE HERE
 Write a query that for each class (`year`, `modifier`) finds unique lesson count.
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT class.year, class.modifier, count(*) AS lesson_cnt
+FROM timetable
+JOIN class ON (timetable.class_id = class.id)
+GROUP BY year, modifier
 ```
