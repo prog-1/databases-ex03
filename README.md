@@ -22,7 +22,11 @@ The table contains grades that a student identified by the student ID received f
 The table may contain `NULL` values. The `NULL` values specify that a student was not attending the exam. 
 
 ```sql
-
+CREATE table exams (
+student_id INTEGER,
+lesson_id INTEGER,
+grade INTEGER
+)
 ```
 
 Create `exams.sql` file with `INSERT INTO` query that adds entries to `exams` table with the data from `exams.csv`.
@@ -58,7 +62,11 @@ GROUP by class.year
 Write a query that outputs `name`, `surname`, `unique_lesson_cnt`, where `unique_lesson_cnt` is the number of **unique** lessons that a student identified by `name`, `surname` has.
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT students.name, students.surname, count(*) as unique_lesson_cnt
+FROM timetable
+JOIN groups ON timetable.class_id = groups.class_id
+JOIN students ON groups.student_id = students.id
+GROUP by students.name, students.surname
 ```
 
 ### 4. Find how many distinct lessons have exams
@@ -67,7 +75,7 @@ Write a query that outputs `name` and `lesson_cnt`, where `lesson_cnt` is the nu
 
 ```sql
 SELECT DISTINCT name FROM exams
-JOIN lessons on lessons.id = exams.lessons_id
+JOIN lessons on exams.lesson_id = lessons.id
 ```
 
 ### 5.1. Find an average grade for each exam
@@ -75,7 +83,13 @@ JOIN lessons on lessons.id = exams.lessons_id
 Write a query that outputs `year`, `modifier`, `lesson` `average_grade`, where `average_grade` is an average grade for each class (identified by `year` and `modifier`) and a subject (identified by `lesson`).
 
 ```sql
-PASTE YOUR CODE HERE
+SELECT class.year || class.modifier as class, lessons.name, round(avg(grade),2) as average_grade
+FROM exams
+JOIN lessons ON exams.lesson_id = lessons.id
+JOIN groups on	groups.student_id = exams.student_id
+JOIN class ON class.id = groups.class_id
+GROUP by year, modifier, lessons.name
+ORDER by class.id
 ```
 
 ### 5.2 Find the number of students that passed/failed exams
