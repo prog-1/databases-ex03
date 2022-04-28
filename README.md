@@ -70,7 +70,7 @@ count(*) AS unique_lesson_cnt
 FROM timetable
 JOIN groups ON timetable.class_id = groups.class_id
 JOIN students ON students.id = groups.student_id
-GROUP BY students.name, students.surname
+GROUP BY students.id
 ;
 ```
 
