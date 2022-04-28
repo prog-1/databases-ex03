@@ -66,7 +66,7 @@ SELECT students.name, students.surname, count(*) as unique_lesson_cnt
 FROM timetable
 JOIN groups ON timetable.class_id = groups.class_id
 JOIN students ON groups.student_id = students.id
-GROUP by students.name, students.surname
+GROUP by students.id
 ```
 
 ### 4. Find how many distinct lessons have exams
