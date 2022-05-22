@@ -22,10 +22,10 @@ The table contains grades that a student identified by the student ID received f
 The table may contain `NULL` values. The `NULL` values specify that a student was not attending the exam. 
 
 ```sql
-CREATE TABLE "exams" (
-	"student_id"	INTEGER,
-	"lesson_id"	INTEGER,
-	"grade"	INTEGER
+CREATE TABLE exams (
+	student_id	INTEGER,
+	lesson_id	INTEGER,
+	grade	INTEGER
 )
 ```
 
@@ -36,10 +36,13 @@ Create `exams.sql` file with `INSERT INTO` query that adds entries to `exams` ta
 Write a query that outputs `year`, `modifier`, `student_cnt` columns that specify the number of students (`student_cnt`) in a class for all classes.
 
 ```sql
-SELECT year, modifier, student_cnt FROM (
-SELECT class_id, count(*) AS student_cnt  
-FROM groups GROUP BY class_id
-) INNER JOIN class on class_id == class.id
+SELECT class.year, class.modifier,
+count(*) AS cnt
+FROM groups 
+JOIN class
+ON class.id = groups.class_id
+GROUP BY class_id
+;
 ```
 
 ### 2. Find the number of students for every year
@@ -47,10 +50,13 @@ FROM groups GROUP BY class_id
 Write a query that outputs `year`, `student_cnt` columns that specify the number of students (`student_cnt`) in a class for each year (`year`).
 
 ```sql
-SELECT year, count(*) AS student_cnt FROM(
-SELECT * FROM groups
-INNER JOIN class on class_id == class.id
-) GROUP BY year
+SELECT class.year,
+count(*) AS cnt
+FROM groups 
+JOIN class
+ON class.id = groups.class_id
+GROUP BY year
+;
 ```
 
 ### 3. Find unique subjects that students learn for a given year
@@ -58,14 +64,13 @@ INNER JOIN class on class_id == class.id
 Write a query that outputs `name`, `surname`, `unique_lesson_cnt`, where `unique_lesson_cnt` is the number of **unique** lessons that a student identified by `name`, `surname` has.
 
 ```sql
-SELECT name, surname, count(*) as unique_lesson_cnt FROM students
-JOIN groups ON groups.student_id == students.id
-JOIN class ON groups.class_id == class.id
-JOIN (
-SELECT class_id as cid FROM timetable
-GROUP BY class_id, lesson_id
-) ON cid == class.id
-GROUP BY students.id 
+SELECT students.name, students.surname,
+count(*) AS unique_lesson_cnt
+FROM timetable
+JOIN groups ON timetable.class_id = groups.class_id
+JOIN students ON students.id = groups.student_id
+GROUP BY students.id
+;
 ```
 
 ### 4. Find how many distinct lessons have exams
@@ -83,13 +88,14 @@ GROUP BY lesson_id
 Write a query that outputs `year`, `modifier`, `lesson` `average_grade`, where `average_grade` is an average grade for each class (identified by `year` and `modifier`) and a subject (identified by `lesson`).
 
 ```sql
-SELECT year, modifier, lessons.name, AVG(exams.grade) FROM timetable
-JOIN class ON timetable.class_id == class.id
-JOIN lessons ON lessons.id == timetable.lesson_id
-JOIN groups ON groups.class_id == class.id
-JOIN students ON students.id == groups.student_id
-JOIN exams ON students.id == exams.student_id
-GROUP BY year, modifier, lessons.name
+SELECT class.year, class.modifier, lessons.name, (AVG(exams.grade), 1)
+AS average_grade
+FROM exams
+JOIN lessons ON exams.lesson_id = lessons.id
+JOIN groups ON exams.student_id = groups.student_id
+JOIN class ON groups.class_id = class.id
+GROUP BY  class.year, class.modifier, lessons.name
+;
 ```
 
 ### 5.2 Find the number of students that passed/failed exams
@@ -155,8 +161,9 @@ LEFT JOIN missed ON students.id = missed.id
 Write a query that for each class (`year`, `modifier`) finds unique lesson count.
 
 ```sql
-SELECT year, modifier, count(*) as unique_lesson FROM class
-JOIN (SELECT * FROM timetable GROUP BY class_id, lesson_id) 
-ON class_id == class.id
-GROUP BY class.id
+SELECT class.year, class.modifier, 
+count(*) AS unique_lessons
+FROM timetable
+JOIN class ON timetable.class_id = class.id
+GROUP BY class.year, class.modifier
 ```
